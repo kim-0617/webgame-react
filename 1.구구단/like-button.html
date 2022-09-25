@@ -7,6 +7,7 @@
 
 <body>
     <div id="root"></div>
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -14,21 +15,57 @@
     <!--<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>-->
     <script type="text/babel">
         'use strict';
-        
-        function LikeButton() {
-            const [liked, setLiked] = React.useState(false);
-            if(liked) {
-                return "You liked this";
+
+        class GuGuDan extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    first: Math.ceil(Math.random() * 9),
+                    second: Math.ceil(Math.random() * 9),
+                    value: '',
+                    result: '',
+                };
             }
 
-            return (
-                <button onClick = {() => {setLiked(true); }}>Like</button>
-            );
+            onSubmit = (e) => {
+                e.preventDefault();
+                if (this.state.first * this.state.second === parseInt(this.state.value)) {
+                    this.setState({
+                        first: Math.ceil(Math.random() * 9),
+                        second: Math.ceil(Math.random() * 9),
+                        value: '',
+                        result: `정답! : ${this.state.first} * ${this.state.second}는 ${this.state.first * this.state.second} 입니다.`,
+                    });
+                }
+                else {
+                    this.setState({
+                        value: '',
+                        result: '땡',
+                    });
+                }
+            }
+
+            onChange = (e) => {
+                this.setState({ value: e.target.value });
+            }
+
+            render() {
+                return (
+                    <div>
+                        <div>{this.state.first}곱하기 {this.state.second}는?</div>
+                        <form onSubmit={this.onSubmit}>
+                            <input type="number" value={this.state.value} onChange={this.onChange} />
+                            <button>입력!</button>
+                        </form>
+                        <div>{this.state.result}</div>
+                    </div>
+                );
+            }
         }
     </script>
     <script type="text/babel">
-        // ReactDOM.render(<LikeButton/>, document.querySelector('#root'));
-        ReactDOM.createRoot(document.querySelector('#root')).render(<LikeButton />);
+        ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+        // ReactDOM.createRoot(document.querySelector('#root')).render(<LikeButton />); // React 18
     </script>
 </body>
 
