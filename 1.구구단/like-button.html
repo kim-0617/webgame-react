@@ -30,11 +30,13 @@
             onSubmit = (e) => {
                 e.preventDefault();
                 if (this.state.first * this.state.second === parseInt(this.state.value)) {
-                    this.setState({
-                        first: Math.ceil(Math.random() * 9),
-                        second: Math.ceil(Math.random() * 9),
-                        value: '',
-                        result: `정답! : ${this.state.first} * ${this.state.second}는 ${this.state.first * this.state.second} 입니다.`,
+                    this.setState((prev) => {
+                        return {
+                            first: Math.ceil(Math.random() * 9),
+                            second: Math.ceil(Math.random() * 9),
+                            value: '',
+                            result: `정답! : ${prev.first} * ${prev.second}는 ${prev.first * prev.second} 입니다.`,
+                        }
                     });
                 }
                 else {
@@ -51,21 +53,21 @@
 
             render() {
                 return (
-                    <div>
+                    <React.Fragment>
                         <div>{this.state.first}곱하기 {this.state.second}는?</div>
                         <form onSubmit={this.onSubmit}>
                             <input type="number" value={this.state.value} onChange={this.onChange} />
                             <button>입력!</button>
                         </form>
                         <div>{this.state.result}</div>
-                    </div>
+                    </React.Fragment>
                 );
             }
         }
     </script>
     <script type="text/babel">
         ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
-        // ReactDOM.createRoot(document.querySelector('#root')).render(<LikeButton />); // React 18
+        // ReactDOM.createRoot(document.querySelector('#root')).render(<GuGuDan />); // React 18
     </script>
 </body>
 
