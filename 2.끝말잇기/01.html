@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hooks</title>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+        const GuGuDan = () => {
+            const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+            const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+            const [value, setValue] = React.useState('');
+            const [result, setResult] = React.useState('');
+            const inputRef = React.useRef();
+
+            const onChange = (e) => {
+                setValue(e.target.value);
+            }
+
+            const onSubmit = (e) => {
+                e.preventDefault();
+                if(first * second === Number(e.target[0].value)) {
+                    setResult('정답');
+                    setFirst(Math.ceil(Math.random() * 9));
+                    setSecond(Math.ceil(Math.random() * 9));
+                    setValue('');
+                    inputRef.current.focus();
+                }
+                else {
+                    setResult('땡');
+                    setValue('');
+                    inputRef.current.focus();
+                }
+            }
+
+            return <React.Fragment>
+                <div>{first} * {second}는?</div>
+                <form onSubmit = {onSubmit}>
+                    <input ref = {inputRef} onChange = {onChange} type="text" value = {value}/>
+                    <input type="submit" value = "제출" />    
+                </form>
+                <div>{result}</div>
+            </React.Fragment>
+        }
+    </script>
+
+    <script type="text/babel">
+        ReactDOM.createRoot(document.querySelector('#root')).render(<GuGuDan />);
+    </script>
+</body>
+</html>
