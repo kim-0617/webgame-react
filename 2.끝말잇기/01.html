@@ -19,7 +19,7 @@
             const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
             const [value, setValue] = React.useState('');
             const [result, setResult] = React.useState('');
-            const inputRef = React.useRef();
+            // const inputRef = React.useRef();
 
             const onChange = (e) => {
                 setValue(e.target.value);
@@ -32,19 +32,21 @@
                     setFirst(Math.ceil(Math.random() * 9));
                     setSecond(Math.ceil(Math.random() * 9));
                     setValue('');
-                    inputRef.current.focus();
+                    // inputRef.current.focus();
+                    e.target[0].focus();
                 }
                 else {
                     setResult('땡');
                     setValue('');
-                    inputRef.current.focus();
+                    // inputRef.current.focus();
+                    e.target[0].focus();
                 }
             }
 
             return <React.Fragment>
                 <div>{first} * {second}는?</div>
                 <form onSubmit = {onSubmit}>
-                    <input ref = {inputRef} onChange = {onChange} type="text" value = {value}/>
+                    <input onChange = {onChange} type="text" value = {value}/>
                     <input type="submit" value = "제출" />    
                 </form>
                 <div>{result}</div>
