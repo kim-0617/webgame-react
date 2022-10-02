@@ -1,5 +1,5 @@
-const React = require('react');
-const ReactDom = require('react-dom');
-const NumberBaseball = require('./NumberBaseball');
+import React from 'react';
+import ReactDom from 'react-dom/client';
+import NumberBaseball from './NumberBaseball';
 
 ReactDom.createRoot(document.querySelector('#root')).render(<NumberBaseball />);
