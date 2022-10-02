@@ -1,27 +1,30 @@
 const path = require('path');
 
 module.exports = {
-    name : 'gugudan-setting',
-    mode : 'development',
-    devtool : 'eval',  // hidden-source-map
-    resolve : {
-        extensions : ['.jsx', '.js'],
+    name: 'gugudan-setting',
+    mode: 'development',
+    devtool: 'eval',  // hidden-source-map
+    resolve: {
+        extensions: ['.jsx', '.js'],
     },
-    entry : {
-        app : ['./client'],
+    entry: {
+        app: ['./client'],
     },
-    module : {
-        rules : [{
-            test : /\.jsx?$/,
-            loader : 'babel-loader',
-            options : {
-                presets : ["@babel/preset-env", "@babel/preset-react",],
-                plugins : [],
+    module: {
+        rules: [{
+            test: /\.jsx?$/,
+            loader: 'babel-loader',
+            options: {
+                presets: [
+                    "@babel/preset-env",
+                    "@babel/preset-react",
+                ],
+                plugins: [],
             },
         }],
     },
-    output : {
-        path : path.join(__dirname, 'dist'),
-        filename : 'app.js',
+    output: {
+        path: path.join(__dirname, 'dist'),
+        filename: 'app.js',
     },
 }
