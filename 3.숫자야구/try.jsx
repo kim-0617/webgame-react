@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, memo } from "react";
 
 // class Try extends Component {
 //     render() {
@@ -10,12 +10,12 @@ import React, { Component } from "react";
 //     }
 // }
 
-const Try = (props) => {
+const Try = memo((props) => {
     return (
         <li key={props.value.tries + props.value.result}>
             {props.index + 1}번째 시도 : {props.value.tries} // {props.value.result}
         </li>
     );
-}
-
+});
+Try.displayName = "Try"; // 메모를 씌우면 컴포넌트 이름이 바뀜
 export default Try;

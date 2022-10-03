@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 import Try from './try';
 
 function getNumbers() { // 숫자 4개를 랜덤하게 뽑는 함수
+    console.log("함수실행")
     const candidate = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     return Array.from(Array(4).keys(), x => x + 1).map((y) => {
         return candidate.splice(Math.floor(Math.random() * candidate.length), 1);
@@ -93,78 +94,165 @@ function getNumbers() { // 숫자 4개를 랜덤하게 뽑는 함수
 
 // const { useState, useRef } = React;
 import { useState, useRef } from 'react';
+// const NumberBaseball = memo(() => {
+//     const [result, setResult] = useState('');
+//     const [value, setValue] = useState('');
+//     const [tries, setTries] = useState([]);
+//     const [answer, setAnswer] = useState(getNumbers); // 함수 자체를 넣으면 한번만 렌더링된다. (lazy-init)
+//     const inputRef = useRef(null);
+
+//     const onSubmit = (e) => {
+//         e.preventDefault();
+//         if (answer.join('') === e.target[0].value) {
+//             setResult('홈런!');
+//             setTries((prevState) => {
+//                 return [...prevState, { tries: value, result: "홈런!" },]
+//             });
+
+//             setTimeout(() => {
+//                 alert("홈런! 게임을 다시 시작합니다.");
+//                 setValue('');
+//                 setResult('');
+//                 setTries([]);
+//                 setAnswer(getNumbers()); // 이자리에는 함수의 return 값 넣어야 함
+//                 inputRef.current.focus();
+//             }, 500);
+//         }
+//         else {
+//             const myInput = value.split('').map(x => parseInt(x));
+//             let ball = 0, strike = 0;
+
+//             if (tries.length >= 9) { // 10번 이상 틀렸을 때
+//                 setResult('실패!');
+
+//                 setTimeout(() => {
+//                     alert("기회가 소진 되었습니다. 다시 시작합니다.");
+//                     setResult('');
+//                     setValue('');
+//                     setTries([]);
+//                     setAnswer(getNumbers());
+//                     inputRef.current.focus();
+//                 }, 500);
+//             }
+//             else {
+//                 answer.map((x, idx) => {
+//                     if (parseInt(x) === myInput[idx]) strike++;
+//                     else if (myInput.includes(parseInt(x))) ball++;
+//                 });
+//                 setResult('');
+//                 setValue('');
+//                 setTries((prevState) => {
+//                     return [...prevState, { tries: value, result: `${ball}볼 ${strike}스트라이크` },]
+//                 });
+//                 inputRef.current.focus();
+//             }
+//         }
+//     }
+
+//     const onChange = (e) => {
+//         console.log(answer)
+//         setValue(e.target.value);
+//     }
+
+//     return (
+//         <>
+//             <h1>{result}</h1>
+//             <form onSubmit={onSubmit}>
+//                 <input type="text" maxLength={4} ref={inputRef} value={value} onChange={onChange} />
+//                 <input type="submit" value="제출" style={{ marginLeft: "20px" }} />
+//             </form>
+//             <div>시도 : {tries.length}</div>
+//             <ul>
+//                 {
+//                     tries.map((v, i) => {
+//                         return <Try key={v.tries + v.result + i} value={v} index={i} />;
+//                     })
+//                 }
+//             </ul>
+//         </>
+//     );
+// });
+
 const NumberBaseball = () => {
-    const [result, setResult] = useState('');
+    const [answer, setAnswer] = useState(getNumbers());
     const [value, setValue] = useState('');
+    const [result, setResult] = useState('');
     const [tries, setTries] = useState([]);
-    const [answer, setAnswer] = useState(getNumbers().join(''));
-    const inputRef = useRef(null);
+    const inputEl = useRef(null);
 
-    const onSubmit = (e) => {
+    const onSubmitForm = (e) => {
         e.preventDefault();
-        if (answer === e.target[0].value) {
+        if (value === answer.join('')) {
+            setTries((t) => ([
+                ...t,
+                {
+                    try: value,
+                    result: '홈런!',
+                }
+            ]));
             setResult('홈런!');
-            setTries([...tries, { tries: value, result: "홈런!" },]);
-
-            setTimeout(() => {
-                alert("홈런! 게임을 다시 시작합니다.");
+            alert('게임을 다시 실행합니다.');
+            setValue('');
+            setAnswer(getNumbers());
+            setTries([]);
+            inputEl.current.focus();
+        } else {
+            const answerArray = value.split('').map((v) => parseInt(v));
+            let strike = 0;
+            let ball = 0;
+            if (tries.length >= 9) {
+                setResult(`10번 넘게 틀려서 실패! 답은 ${answer.join(',')}였습니다!`); // state set은 비동기
+                alert('게임을 다시 시작합니다.');
                 setValue('');
+                setAnswer(getNumbers());
                 setTries([]);
-                setAnswer(getNumbers().join(''));
-                inputRef.current.focus();
-            }, 500);
-        }
-        else {
-            const myInput = value.split('').map(x => parseInt(x));
-            let ball = 0, strike = 0;
-
-            if (tries.length >= 5) { // 10번 이상 틀렸을 때
-                setResult('실패!');
-
-                setTimeout(() => {
-                    alert("기회가 소진 되었습니다. 다시 시작합니다.");
-                    setResult('');
-                    setValue('');
-                    setTries([]);
-                    setAnswer(getNumbers().join(''));
-                    inputRef.current.focus();
-                }, 500);
-            }
-            else {
-                answer.split('').map((x, idx) => {
-                    if (parseInt(x) === myInput[idx]) strike++;
-                    else if (myInput.includes(parseInt(x))) ball++;
-                });
-                setResult('');
+                inputEl.current.focus();
+            } else {
+                console.log('답은', answer.join(''));
+                for (let i = 0; i < 4; i += 1) {
+                    if (answerArray[i] === Number(answer[i])) {
+                        console.log('strike', answerArray[i], answer[i]);
+                        strike += 1;
+                    } else if (answer.join('').split('').includes(String([answerArray[i]]))) {
+                        console.log('ball', answerArray[i], answer.indexOf(answerArray[i]));
+                        ball += 1;
+                    }
+                }
+                setTries(t => ([
+                    ...t,
+                    {
+                        try: value,
+                        result: `${strike} 스트라이크, ${ball} 볼입니다.`,
+                    }
+                ]));
                 setValue('');
-                setTries([...tries, { tries: value, result: `${ball}볼 ${strike}스트라이크` },]);
-                inputRef.current.focus();
+                inputEl.current.focus();
             }
         }
-    }
+    };
 
-    const onChange = (e) => {
-        console.log(answer)
-        setValue(e.target.value);
-    }
+    const onChangeInput = (e) => setValue(e.target.value);
 
     return (
         <>
             <h1>{result}</h1>
-            <form onSubmit={onSubmit}>
-                <input type="text" maxLength={4} ref={inputRef} value={value} onChange={onChange} />
-                <input type="submit" value="제출" style={{ marginLeft: "20px" }} />
+            <form onSubmit={onSubmitForm}>
+                <input
+                    ref={inputEl}
+                    maxLength={4}
+                    value={value}
+                    onChange={onChangeInput}
+                />
+                <button>입력!</button>
             </form>
-            <div>시도 : {tries.length}</div>
+            <div>시도: {tries.length}</div>
             <ul>
-                {
-                    tries.map((v, i) => {
-                        return <Try key={v.tries + v.result + i} value={v} index={i} />;
-                    })
-                }
+                {tries.map((v, i) => (
+                    <Try key={v.try + v.result + i} value = {v} index = {i}/>
+                ))}
             </ul>
         </>
     );
-}
+};
 
 export default NumberBaseball;
