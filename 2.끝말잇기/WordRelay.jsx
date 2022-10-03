@@ -50,6 +50,7 @@ const { Component } = React;
 //     }
 // }
 
+
 const { useState, useRef } = React;
 const WordRelay = () => {
     const [word, setWord] = useState('제로초');

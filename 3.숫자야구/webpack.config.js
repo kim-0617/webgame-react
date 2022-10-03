@@ -1,5 +1,4 @@
-// const path = require('path');
-import path from 'path';
+const path = require('path');
 const RefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 module.exports = {
