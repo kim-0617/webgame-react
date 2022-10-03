@@ -1,0 +1,111 @@
+const React = require('react');
+const { Component } = React;
+
+// 라이프 사이클 : constructor => render => ref => componentDidMount => state / props 바뀔 때 shouldComponentUpdate => (reRendering)
+// componentDidUpdate => componentWillUnmount => 소멸
+const rspCoord = {
+    rock: "0",
+    scissor: "-142px",
+    paper: "-284px",
+}
+const score = {
+    rock: 1,
+    scissor: 0,
+    paper: -1,
+}
+const computerChoice = (imgCoord)  => {
+    let answer = '';
+    Object.entries(rspCoord).forEach((Coord) => {
+        if(Coord[1] === imgCoord) answer = Coord[0];
+    });
+    return answer;
+}
+class RSP extends Component {
+    state = {
+        result: '',
+        imgCoord: '0',
+        score: 0,
+    }
+
+    interval;
+
+    clickable = true;
+
+    changeHand = () => {
+        if (rspCoord.rock === this.state.imgCoord) {
+            this.setState({ imgCoord: rspCoord.scissor });
+        }
+        else if (rspCoord.scissor === this.state.imgCoord) {
+            this.setState({ imgCoord: rspCoord.paper });
+        }
+        else if (rspCoord.paper === this.state.imgCoord) {
+            this.setState({ imgCoord: rspCoord.rock });
+        }
+    }
+
+    componentDidMount() { // 컴포넌트가 Dom에 붙었을 때 (첫 개시 때), 비동기 요청을 많이 함
+        this.interval = setInterval(this.changeHand, 100);
+    }
+
+    onClickBtn = (e) => {
+        if(!this.clickable) return;
+
+        this.clickable = false;
+        clearInterval(this.interval);
+        const myChoice = score[e.target.id];
+        const cpuChoice = score[computerChoice(this.state.imgCoord)];
+        const diff = myChoice - cpuChoice;
+
+        if (diff === 0) {
+            this.setState({ result: "비겼습니다!" });
+        }
+        else if ([1, -2].includes(diff)) {
+            this.setState((prevState) => {
+                return { result: "이겼습니다!",  score : prevState.score + 1}
+            });
+        }
+        else {
+            this.setState((prevState) => {
+                return { result: "졌습니다!",  score : prevState.score - 1}
+            });
+        }
+
+        setTimeout(() => {
+            this.interval = setInterval(this.changeHand, 100);
+            this.clickable = true;
+        }, 2000);
+    }
+
+    render() {
+        return (
+            <>
+                <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${this.state.imgCoord} 0` }} />
+                <div>
+                    <button id="rock" className="btn" onClick={this.onClickBtn}>바위</button>
+                    <button id="scissor" className="btn" onClick={this.onClickBtn}>가위</button>
+                    <button id="paper" className="btn" onClick={this.onClickBtn}>보</button>
+                </div>
+                <div>{this.state.result}</div>
+                <div>현재 {this.state.score}점</div>
+            </>
+        );
+    }
+}
+
+const { useState, useRef } = React;
+// const RSP = () => {
+
+//     return (
+//         <>
+//             <div id="computer" style={{ background: `url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ${imgCoord} 0` }} />
+//             <div>
+//                 <button id="rock" className="btn" onClick={this.onClickBtn('바위')}>바위</button>
+//                 <button id="scissor" className="btn" onClick={this.onClickBtn('가위')}>가위</button>
+//                 <button id="paper" className="btn" onClick={this.onClickBtn('보')}>보</button>
+//             </div>
+//             <div>{result}</div>
+//             <div>현재 {score}점</div>
+//         </>
+//     );
+// }
+export default RSP;
