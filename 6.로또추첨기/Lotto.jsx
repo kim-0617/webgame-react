@@ -85,9 +85,10 @@ function getWinNumbers() {
 //     }
 // }
 
-const { useState, useRef, useEffect } = React;
+const { useState, useRef, useEffect, useMemo, useCallback } = React;
 const Lotto = () => {
-    const [winNumbers, setWinNumbers] = useState(getWinNumbers);
+    const lottoNumbers = useMemo(() => getWinNumbers(), []);
+    const [winNumbers, setWinNumbers] = useState(lottoNumbers);
     const [winBalls, setWinBalls] = useState([]);
     const [bonus, setBonus] = useState(null);
     const [redo, setRedo] = useState(false);
@@ -118,13 +119,30 @@ const Lotto = () => {
         }
     }, [timeouts.current]); // 빈 배열이면 state가 뭐가 바뀌던지 한번만 실행하겠다, state를 넣으면 그 state가 변하는걸 감지해서 계속적 실행
 
-    const onClick = () => {
+    /*
+    useEffect(() => {
+        // ajax
+    }, []);
+
+    const mounted = useRef(false);
+    useEffect(() => {
+        if(!mounted.current) {
+            mounted.current = true;
+        }
+        else {
+            // ajax
+        }
+    }, [바뀌는 값]);
+    */
+
+    const onClick = useCallback(() => {
+        console.log(winNumbers);
         setWinNumbers(getWinNumbers());
         setWinBalls([]);
         setBonus(null);
         setRedo(false);
         timeouts.current = []; // 이건 바뀌는거임 직접 넣어줬기 때문에
-    }
+    }, [winNumbers]);
 
     return (
         <>
