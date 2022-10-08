@@ -47,7 +47,7 @@ class RSP extends Component {
     componentDidMount() { // 컴포넌트가 Dom에 붙었을 때 (첫 개시 때), 비동기 요청을 많이 함
         this.interval = setInterval(this.changeHand, 100);
     }
-
+    
     onClickBtn = (e) => {
         if(!this.clickable) return;
 
