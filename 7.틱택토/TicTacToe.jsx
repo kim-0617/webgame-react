@@ -1,7 +1,7 @@
 const React = require('react');
 const { Component } = React;
 
-class Lotto extends Component {
+class TicTacToe extends Component {
     state = {
 
     }
@@ -9,14 +9,14 @@ class Lotto extends Component {
     render() {
         return (
             <>
-            
+                HelloWorld
             </>
         );
     }
 }
 
 const { useState, useRef, useEffect, useMemo, useCallback } = React;
-// const Lotto = () => {
+// const TicTacToe = () => {
 
 //     return (
 //         <>
@@ -24,4 +24,4 @@ const { useState, useRef, useEffect, useMemo, useCallback } = React;
 //         </>
 //     );
 // }
-export default Lotto
+export default TicTacToe
