@@ -1,5 +1,5 @@
-import React, { memo, useContext } from 'react';
-import { TableContext, CODE } from './MineSweeper';
+import React, { memo, useCallback, useContext } from 'react';
+import { TableContext, CODE, OPEN_CELL, CLICK_MINE, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL } from './MineSweeper';
 
 const getTdStyle = (code) => {
     switch (code) {
@@ -8,9 +8,20 @@ const getTdStyle = (code) => {
             return {
                 background: '#555',
             }
+        case CODE.CLICK_MINE:
         case CODE.OPENED:
             return {
                 background: '#FFF',
+            }
+        case CODE.FLAG:
+        case CODE.FLAG_MINE:
+            return {
+                background: 'red',
+            }
+        case CODE.QUESTION:
+        case CODE.QUESTION_MINE:
+            return {
+                background: 'yellow',
             }
         default:
             return {
@@ -25,16 +36,87 @@ const getTdText = (code) => {
             return '';
         case CODE.MINE:
             return 'X';
+        case CODE.CLICK_MINE:
+            return '펑!';
+        case CODE.FLAG:
+        case CODE.FLAG_MINE:
+            return '!';
+        case CODE.QUESTION:
+        case CODE.QUESTION_MINE:
+            return '?';
         default:
-            return '';
+            return code || '';
     }
 }
 
 const Td = ({ rowIndex, colIndex }) => {
-    const { tableData } = useContext(TableContext);
+    const { tableData, dispatch, halted } = useContext(TableContext);
+   
+    const onClickTd = useCallback(() => {
+        if (halted) return;
+        console.log(tableData[rowIndex][colIndex])
+        switch (tableData[rowIndex][colIndex]) {
+            case CODE.OPENED:
+            case CODE.FLAG:
+            case CODE.FLAG_MINE:
+            case CODE.QUESTION:
+            case CODE.QUESTION_MINE:
+                return;
+
+            case CODE.NORMAL:
+                dispatch({
+                    type: OPEN_CELL,
+                    row: rowIndex,
+                    col: colIndex,
+                }, []);
+                return;
+            case CODE.MINE:
+                dispatch({
+                    type: CLICK_MINE,
+                    row: rowIndex,
+                    col: colIndex,
+                });
+                return;
+            default:
+                return;
+        }
+    }, [tableData[rowIndex][colIndex], halted]);
+
+    const onRightClickTd = useCallback((e) => {
+        e.preventDefault();
+        if(halted) return;
+        switch (tableData[rowIndex][colIndex]) {
+            case CODE.NORMAL:
+            case CODE.MINE:
+                dispatch({
+                    type: FLAG_CELL,
+                    row: rowIndex,
+                    col: colIndex,
+                });
+                return;
+            case CODE.FLAG:
+            case CODE.FLAG_MINE:
+                dispatch({
+                    type: QUESTION_CELL,
+                    row: rowIndex,
+                    col: colIndex,
+                });
+                return;
+            case CODE.QUESTION:
+            case CODE.QUESTION_MINE:
+                dispatch({
+                    type: NORMALIZE_CELL,
+                    row: rowIndex,
+                    col: colIndex,
+                });
+                return;
+            default:
+                return;
+        }
+    }, [tableData[rowIndex][colIndex], halted]);
 
     return (
-        <td style={getTdStyle(tableData[rowIndex][colIndex])}>{getTdText(tableData[rowIndex][colIndex])}</td>
+        <td style={getTdStyle(tableData[rowIndex][colIndex])} onClick={onClickTd} onContextMenu={onRightClickTd}>{getTdText(tableData[rowIndex][colIndex])}</td>
     );
 };
 
