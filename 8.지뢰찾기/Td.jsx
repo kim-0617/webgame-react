@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useContext } from 'react';
+import React, { memo, useCallback, useContext, useMemo } from 'react';
 import { TableContext, CODE, OPEN_CELL, CLICK_MINE, FLAG_CELL, QUESTION_CELL, NORMALIZE_CELL } from './MineSweeper';
 
 const getTdStyle = (code) => {
@@ -31,6 +31,7 @@ const getTdStyle = (code) => {
 };
 
 const getTdText = (code) => {
+    console.log("getTdText");
     switch (code) {
         case CODE.NORMAL:
             return '';
@@ -49,12 +50,13 @@ const getTdText = (code) => {
     }
 }
 
-const Td = ({ rowIndex, colIndex }) => {
+const Td = memo(({ rowIndex, colIndex }) => {
     const { tableData, dispatch, halted } = useContext(TableContext);
-   
+
     const onClickTd = useCallback(() => {
+        console.log("onClickTd");
         if (halted) return;
-        console.log(tableData[rowIndex][colIndex])
+        // console.log(tableData[rowIndex][colIndex])
         switch (tableData[rowIndex][colIndex]) {
             case CODE.OPENED:
             case CODE.FLAG:
@@ -84,7 +86,7 @@ const Td = ({ rowIndex, colIndex }) => {
 
     const onRightClickTd = useCallback((e) => {
         e.preventDefault();
-        if(halted) return;
+        if (halted) return;
         switch (tableData[rowIndex][colIndex]) {
             case CODE.NORMAL:
             case CODE.MINE:
@@ -115,9 +117,9 @@ const Td = ({ rowIndex, colIndex }) => {
         }
     }, [tableData[rowIndex][colIndex], halted]);
 
-    return (
+    return useMemo(() => (
         <td style={getTdStyle(tableData[rowIndex][colIndex])} onClick={onClickTd} onContextMenu={onRightClickTd}>{getTdText(tableData[rowIndex][colIndex])}</td>
-    );
-};
+    ), [tableData[rowIndex][colIndex]]);
+});
 
 export default Td;
