@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
+
 import GuGuDan from '../1.구구단/GuGuDan';
 import WordRelay from '../2.끝말잇기/WordRelay';
 import NumberBaseball from '../3.숫자야구/NumberBaseball';
 import ReactTest from '../4.반응속도/ReactTest';
 import RSP from '../5.가위바위보/RSP';
 import Lotto from '../6.로또추첨기/Lotto';
+
 import { useLocation, useNavigate, Routes, Route } from 'react-router';
 
 const GameMatcher = () => {
