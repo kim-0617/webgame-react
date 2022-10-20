@@ -6,8 +6,10 @@ import NumberBaseball from '../3.숫자야구/NumberBaseball';
 import ReactTest from '../4.반응속도/ReactTest';
 import RSP from '../5.가위바위보/RSP';
 import Lotto from '../6.로또추첨기/Lotto';
+import TicTacToe from '../7.틱택토/TicTacToe';
 
 import { useLocation, useNavigate, Routes, Route } from 'react-router';
+const { useState, useRef, useEffect, useMemo, useCallback, useReducer, memo } = React;
 
 const GameMatcher = () => {
   const location = useLocation();
@@ -23,6 +25,7 @@ const GameMatcher = () => {
       <Route path="react-test" element={<ReactTest />} />
       <Route path="rock-scissors-paper" element={<RSP />} />
       <Route path="lotto-generator" element={<Lotto />} />
+      <Route path="tictactoe" element={<TicTacToe />} />
       <Route
         path="*"
         element={<div>

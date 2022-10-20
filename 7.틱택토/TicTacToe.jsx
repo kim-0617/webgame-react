@@ -15,58 +15,57 @@ import Table from './Table';
 //     }
 // }
 
-const initialState = {
-    winner: '',
-    turn: 'O',
-    tableData: [['', '', ''], ['', '', ''], ['', '', ''],],
-    recentCell: [-1, -1],
-};
-
 export const SET_WINNER = 'SET_WINNER';
 export const CLICK_CELL = 'CLICK_CELL';
 export const CHANGE_TURN = 'CHANGE_TURN';
 export const RESET_GAME = 'RESET_GAME';
-
-const reducer = (state, action) => { // action 객체를 어떻게 바꿀지 여기서 써준다.
-    switch (action.type) {
-        // winner = action.winner 이렇게 직접 바꾸면 안됨, 새로 객체를 만들어서 바뀐값만
-        case SET_WINNER:
-            return { // state를 어떻게 바꿀지 기술
-                ...state,
-                winner: action.winner,
-            };
-        case CLICK_CELL:
-            const tableData = [...state.tableData];
-            tableData[action.row] = [...tableData[action.row]];
-            tableData[action.row][action.cell] = state.turn;
-            return {
-                ...state,
-                tableData,
-                recentCell: [action.row, action.cell],
-            };
-        case CHANGE_TURN:
-            return {
-                ...state,
-                turn: state.turn === 'O' ? 'X' : 'O',
-            };
-        case RESET_GAME:
-            return {
-                ...state,
-                winner: '',
-                turn: 'O',
-                tableData: [['', '', ''], ['', '', ''], ['', '', ''],],
-                recentCell: [-1, -1],
-            };
-        default:
-            return state;
-    }
-}
 
 const { useState, useRef, useEffect, useMemo, useCallback, useReducer, memo } = React;
 const TicTacToe = memo(() => {
     // const [winner, setWinner] = useState('');
     // const [turn, setTurn] = useState('O');
     // const [tableData, setTableData] = useState([['', '', ''], ['', '', ''], ['', '', ''],]);
+    const initialState = {
+        winner: '',
+        turn: 'O',
+        tableData: [['', '', ''], ['', '', ''], ['', '', ''],],
+        recentCell: [-1, -1],
+    };
+
+    const reducer = (state, action) => { // action 객체를 어떻게 바꿀지 여기서 써준다.
+        switch (action.type) {
+            // winner = action.winner 이렇게 직접 바꾸면 안됨, 새로 객체를 만들어서 바뀐값만
+            case SET_WINNER:
+                return { // state를 어떻게 바꿀지 기술
+                    ...state,
+                    winner: action.winner,
+                };
+            case CLICK_CELL:
+                const tableData = [...state.tableData];
+                tableData[action.row] = [...tableData[action.row]];
+                tableData[action.row][action.cell] = state.turn;
+                return {
+                    ...state,
+                    tableData,
+                    recentCell: [action.row, action.cell],
+                };
+            case CHANGE_TURN:
+                return {
+                    ...state,
+                    turn: state.turn === 'O' ? 'X' : 'O',
+                };
+            case RESET_GAME:
+                return {
+                    ...state,
+                    winner: '',
+                    turn: 'O',
+                    tableData: [['', '', ''], ['', '', ''], ['', '', ''],],
+                    recentCell: [-1, -1],
+                };
+            default:
+                return state;
+        }
+    }
     const [state, dispatch] = useReducer(reducer, initialState);
     const { winner, turn, tableData, recentCell } = state;
 

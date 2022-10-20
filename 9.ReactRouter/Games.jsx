@@ -12,11 +12,10 @@ const Games = () => {
                 <Link to="/game/react-test">반응속도 테스트</Link>
                 <Link to="/game/rock-scissors-paper">가위바위보</Link>
                 <Link to="/game/lotto-generator">로또생성기</Link>
-                <Link to="/game/index">게임 매쳐</Link>
+                <Link to="/game/tictactoe">틱택토</Link>
             </div>
             <div className='games'>
                 <Routes>
-                    <Route path="/" element={<GameMatcher />} />
                     <Route path="/game/*" element={<GameMatcher />} />
                 </Routes>
             </div>
